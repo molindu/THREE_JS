@@ -14,8 +14,6 @@ const cubeMesh = new THREE.Mesh(
 )
 scene.add(cubeMesh)
 
-// console.log(window.devicePixelRatio)
-
 // initialize the camera
 const camera = new THREE.PerspectiveCamera(
   70, 
@@ -32,9 +30,11 @@ camera.position.z = 5
 // initialize the renderer
 const canvas = document.querySelector('canvas.threejs')
 const renderer = new THREE.WebGLRenderer({
-  canvas: canvas
+  canvas: canvas,
+  antialias: true
 })
 renderer.setSize(window.innerWidth, window.innerHeight)
+renderer.setPixelRatio( Math.min(window.devicePixelRatio, 2))
 
 // console.log(camera)
 //initialize the controls
