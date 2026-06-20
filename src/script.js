@@ -14,6 +14,9 @@ const cubeMesh = new THREE.Mesh(
 )
 scene.add(cubeMesh);
 
+// cubeMesh.scale.y = 2;
+cubeMesh.scale.set(2, 2, 1)
+
 // cubeMesh.position.x = 1
 // cubeMesh.position.y = 1 
 // cubeMesh.position.z = 1
