@@ -14,9 +14,12 @@ const cubeMesh = new THREE.Mesh(
 )
 scene.add(cubeMesh);
 
-cubeMesh.position.x = 1
-cubeMesh.position.y = 1 
-cubeMesh.position.z = 1
+// cubeMesh.position.x = 1
+// cubeMesh.position.y = 1 
+// cubeMesh.position.z = 1
+
+const tempVector = new THREE.Vector3(1, 1, 1)
+cubeMesh.position.copy(tempVector)
 
 const axesHelper = new THREE.AxesHelper(2)
 scene.add(axesHelper)
