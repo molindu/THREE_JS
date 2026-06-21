@@ -11,11 +11,13 @@ const cubeMaterial = new THREE.MeshBasicMaterial({ color: "red", wireframe: true
 const cubeMesh = new THREE.Mesh(
   cubeGeometry,
   cubeMaterial
-)          
-cubeMesh.position.y =1;   
-cubeMesh.position.x =6;   
+)
 
 
+cubeMesh.rotation.reorder("YXZ")
+// cubeMesh.rotation.x = -Math.PI * 0.65;
+cubeMesh.rotation.x = THREE.MathUtils.degToRad(75);
+// cubeMesh.rotation.y = THREE.MathUtils.degToRad(45);
 // const cubeMesh2 = new THREE.Mesh(
 //   cubeGeometry,
 //   cubeMaterial
@@ -24,14 +26,17 @@ cubeMesh.position.x =6;
 //   cubeGeometry,
 //   cubeMaterial
 // )
+cubeMesh.position.y = 1;
+cubeMesh.position.x = 1;
+cubeMesh.scale.x = 1.5;
 
 const group = new THREE.Group();
 // group.add(cubeMesh);
 // group.add(cubeMesh2);
 // group.add(cubeMesh3);
 
-group.position.y = 2;
-group.scale.setScalar(2)
+// group.position.y = 2;
+// group.scale.setScalar(2)
 // scene.add(group)
 scene.add(cubeMesh);
 
@@ -79,7 +84,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 const controls = new OrbitControls(camera, canvas)
 
 controls.enableDamping = true
-controls.autoRotate = true
+// controls.autoRotate = true
 
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
