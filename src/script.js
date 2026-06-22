@@ -16,7 +16,7 @@ const cubeMesh = new THREE.Mesh(
 
 cubeMesh.rotation.reorder("YXZ")
 // cubeMesh.rotation.x = -Math.PI * 0.65;
-cubeMesh.rotation.x = THREE.MathUtils.degToRad(75);
+// cubeMesh.rotation.x = THREE.MathUtils.degToRad(75);
 // cubeMesh.rotation.y = THREE.MathUtils.degToRad(45);
 // const cubeMesh2 = new THREE.Mesh(
 //   cubeGeometry,
@@ -53,8 +53,8 @@ scene.add(cubeMesh);
 // cubeMesh.position.copy(tempVector)
 
 const axesHelper = new THREE.AxesHelper(2)
-cubeMesh.add(axesHelper)
-// scene.add(axesHelper)
+// cubeMesh.add(axesHelper)
+scene.add(axesHelper)
 
 
 // initialize the camera
@@ -91,9 +91,21 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight)
 })
+//initialize the clock
+const clock = new THREE.Clock();
+let previousTime = 0;
 
 //render the scene
 const renderloop = () => {
+  
+  // console.log(clock.getElapsedTime())
+  const currentTime = clock.getElapsedTime();
+  const delta = currentTime - previousTime;
+  previousTime = currentTime;
+  
+  // console.log(delta);
+  cubeMesh.rotation.y += THREE.MathUtils.degToRad(1)*delta*20;
+
   controls.update()
   renderer.render(scene, camera)
   window.requestAnimationFrame(renderloop)
