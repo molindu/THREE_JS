@@ -97,14 +97,18 @@ let previousTime = 0;
 
 //render the scene
 const renderloop = () => {
-  
+
   // console.log(clock.getElapsedTime())
   const currentTime = clock.getElapsedTime();
   const delta = currentTime - previousTime;
   previousTime = currentTime;
-  
+
   // console.log(delta);
-  cubeMesh.rotation.y += THREE.MathUtils.degToRad(1)*delta*20;
+  cubeMesh.rotation.y += THREE.MathUtils.degToRad(1) * delta * 20;
+  // cubeMesh.position.x += 1 * delta;
+  cubeMesh.scale.x = Math.sin(currentTime) * 0.5 + 1;
+  cubeMesh.position.x = Math.sin(currentTime) + 1;
+  // console.log(Math.sin(currentTime));
 
   controls.update()
   renderer.render(scene, camera)
