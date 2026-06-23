@@ -5,23 +5,26 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 const scene = new THREE.Scene()
 
 // add objects to the scene
-// const cubeGeometry = new THREE.BoxGeometry(1, 1, 1)
+// const cubeGeometry = new THREE.BoxGeometry(1, 1, 1, 2, 2, 2)
+// const cubeGeometry = new THREE.SphereGeometry(2,16,16);
+// const cubeGeometry = new THREE.PlaneGeometry(1, 1, 2, 2)
+const cubeGeometry = new THREE.TorusKnotGeometry(10, 2, 100, 16)
 
 // create custom geometry
-const vertices = new Float32Array([
-  0, 0, 0,  // bottom-left
-  0, 2, 0,  // top-left
-  2, 0, 0,  // bottom-right
-]);
+// const vertices = new Float32Array([
+//   0, 0, 0,  // bottom-left
+//   0, 2, 0,  // top-left
+//   2, 0, 0,  // bottom-right
+// ]);
 
-const bufferAttribute = new THREE.BufferAttribute(vertices, 3);
-const geometry = new THREE.BufferGeometry();
-geometry.setAttribute('position', bufferAttribute);
-const cubeMaterial = new THREE.MeshBasicMaterial({ color: "red", wireframe: true })
+// const bufferAttribute = new THREE.BufferAttribute(vertices, 3);
+// const geometry = new THREE.BufferGeometry();
+// geometry.setAttribute('position', bufferAttribute);
+const cubeMaterial = new THREE.MeshBasicMaterial({ color: "red",wireframe: true  })
 
 const cubeMesh = new THREE.Mesh(
-  // cubeGeometry,
-  geometry,
+  cubeGeometry,
+  // geometry,
   cubeMaterial
 )
 
@@ -40,7 +43,7 @@ cubeMesh.rotation.reorder("YXZ")
 // )
 cubeMesh.position.y = 1;
 cubeMesh.position.x = 1;
-cubeMesh.scale.x = 1.5;
+// cubeMesh.scale.x = 1.5;
 
 const group = new THREE.Group();
 // group.add(cubeMesh);
