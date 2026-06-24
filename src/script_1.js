@@ -1,9 +1,5 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { Pane } from 'tweakpane';
-
-// initialize the pane
-const pane = new Pane();
 
 // initialize the scene
 const scene = new THREE.Scene()
@@ -12,20 +8,15 @@ const scene = new THREE.Scene()
 const cubeGeometry = new THREE.BoxGeometry(1, 1, 1)
 const torusKnotGeometry = new THREE.TorusKnotGeometry(0.5, 0.15, 100, 16)
 const planeGeometry = new THREE.PlaneGeometry(1, 1);
+const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+const cylinderGeometry = new THREE.CylinderGeometry(0.5, 0.5, 1, 32)
 
 // initialize the material
-const material = new THREE.MeshPhysicalMaterial();
-material.color = new THREE.Color('green');
+const material = new THREE.MeshBasicMaterial();
 
+// initialize the group
+const group = new THREE.Group();
 
-pane.addBinding(material, 'metalness', { min: 0, max: 1, step: 0.01 });
-pane.addBinding(material, 'roughness', { min: 0, max: 1, step: 0.01 });
-pane.addBinding(material, 'reflectivity', { min: 0, max: 1, step: 0.01 });
-pane.addBinding(material, 'clearcoat', {
-  min: 0,
-  max: 1,
-  step: 0.01,
-});
 const cubeMesh = new THREE.Mesh(
   cubeGeometry,
   material
@@ -38,24 +29,35 @@ const planeMesh = new THREE.Mesh(
   planeGeometry,
   material
 );
+const sphere = new THREE.Mesh();
+sphere.geometry = sphereGeometry;
+sphere.material = material;
+sphere.position.y = 1.5;
+
+
+const cylinder = new THREE.Mesh();
+cylinder.geometry = cylinderGeometry;
+cylinder.material = material;
+cylinder.position.y = -1.5;
+
 cubeMesh.rotation.reorder("YXZ")
 
 cubeMesh2.position.x = 2;
 planeMesh.position.x = -2;
-scene.add(cubeMesh);
-scene.add(cubeMesh2);
-scene.add(planeMesh);
+
+group.add(cubeMesh, cubeMesh2, planeMesh, sphere, cylinder);
+scene.add(group);
 
 const axesHelper = new THREE.AxesHelper(2)
 scene.add(axesHelper)
 
-// initialize the light 
-const light = new THREE.AmbientLight(0xffffff, 0.4);
-scene.add(light);
+//initialize the light 
+// const light = new THREE.AmbientLight(0xffffff, 0.4);
+// scene.add(light);
 
-const pointLight = new THREE.PointLight(0xffffff, 70);
-pointLight.position.set(2, 2, 2);
-scene.add(pointLight);
+// const pointLight = new THREE.PointLight(0xffffff, 70);
+// pointLight.position.set(2, 2, 2);
+// scene.add(pointLight);
 
 // initialize the camera
 const camera = new THREE.PerspectiveCamera(
@@ -87,16 +89,16 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight)
 })
-//initialize the clock
-const clock = new THREE.Clock();
-let previousTime = 0;
 
 //render the scene
 const renderloop = () => {
 
-  const currentTime = clock.getElapsedTime();
-  const delta = currentTime - previousTime;
-  previousTime = currentTime;
+  group.children.forEach((child) => {
+    if (child instanceof THREE.Mesh) {
+      child.rotation.x += 0.01;
+      child.rotation.y += 0.01;
+    }
+  });
 
   controls.update()
   renderer.render(scene, camera)
