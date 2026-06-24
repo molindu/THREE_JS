@@ -14,15 +14,17 @@ const torusKnotGeometry = new THREE.TorusKnotGeometry(0.5, 0.15, 100, 16)
 const planeGeometry = new THREE.PlaneGeometry(1, 1);
 
 // initialize the material
-// const material = new THREE.MeshLambertMaterial()
-const material = new THREE.MeshPhongMaterial();
-// material.shininess = 100;
-material.color = new THREE.Color(0xff2400);
+const material = new THREE.MeshPhysicalMaterial();
+material.color = new THREE.Color('green');
 
-pane.addBinding(material, 'shininess', {
+
+pane.addBinding(material, 'metalness', { min: 0, max: 1, step: 0.01 });
+pane.addBinding(material, 'roughness', { min: 0, max: 1, step: 0.01 });
+pane.addBinding(material, 'reflectivity', { min: 0, max: 1, step: 0.01 });
+pane.addBinding(material, 'clearcoat', {
   min: 0,
-  max: 100,
-  step: 1
+  max: 1,
+  step: 0.01,
 });
 const cubeMesh = new THREE.Mesh(
   cubeGeometry,
@@ -48,10 +50,10 @@ const axesHelper = new THREE.AxesHelper(2)
 scene.add(axesHelper)
 
 // initialize the light 
-const light = new THREE.AmbientLight(0xffffff, 0.1);
+const light = new THREE.AmbientLight(0xffffff, 0.4);
 scene.add(light);
 
-const pointLight = new THREE.PointLight(0xffffff, 50);
+const pointLight = new THREE.PointLight(0xffffff, 70);
 pointLight.position.set(2, 2, 2);
 scene.add(pointLight);
 
