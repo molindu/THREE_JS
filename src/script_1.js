@@ -4,6 +4,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 // initialize the scene
 const scene = new THREE.Scene()
 
+// initialize the loader
+const textureLoader = new THREE.TextureLoader();
+
 // add objects to the scene
 const cubeGeometry = new THREE.BoxGeometry(1, 1, 1)
 const torusKnotGeometry = new THREE.TorusKnotGeometry(0.5, 0.15, 100, 16)
@@ -11,8 +14,14 @@ const planeGeometry = new THREE.PlaneGeometry(1, 1);
 const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
 const cylinderGeometry = new THREE.CylinderGeometry(0.5, 0.5, 1, 32)
 
+//initialize the texture
+const textureText = textureLoader.load('textures/speckled-granite-tiles-unity/speckled-granite-tiles_normal-ogl.png');
+
 // initialize the material
 const material = new THREE.MeshBasicMaterial();
+// const material = new THREE.MeshPhongMaterial();
+material.map = textureText;
+// material.color = new THREE.Color('red');
 
 // initialize the group
 const group = new THREE.Group();
