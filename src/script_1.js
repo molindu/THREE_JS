@@ -1,46 +1,59 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { Pane } from 'tweakpane';
+
+// initialize the pane
+const pane = new Pane();
 
 // initialize the scene
 const scene = new THREE.Scene()
 
 // add objects to the scene
 const cubeGeometry = new THREE.BoxGeometry(1, 1, 1)
-
-const cubeMaterial = new THREE.MeshBasicMaterial();
-
+const torusKnotGeometry = new THREE.TorusKnotGeometry(0.5, 0.15, 100, 16)
 const planeGeometry = new THREE.PlaneGeometry(1, 1);
-// cubeMaterial.transparent = true;
-// cubeMaterial.opacity = 0.5;
-cubeMaterial.side = THREE.DoubleSide;
-cubeMaterial.color = new THREE.Color('red');
 
-const fog = new THREE.Fog(0xffffff, 1, 9);
-scene.fog = fog;
-scene.background = new THREE.Color('white');
-cubeMaterial.fog = true;
+// initialize the material
+// const material = new THREE.MeshLambertMaterial()
+const material = new THREE.MeshPhongMaterial();
+// material.shininess = 100;
+material.color = new THREE.Color(0xff2400);
 
+pane.addBinding(material, 'shininess', {
+  min: 0,
+  max: 100,
+  step: 1
+});
 const cubeMesh = new THREE.Mesh(
   cubeGeometry,
-  cubeMaterial
+  material
 )
 const cubeMesh2 = new THREE.Mesh(
-  cubeGeometry,
-  cubeMaterial
+  torusKnotGeometry,
+  material
 )
 const planeMesh = new THREE.Mesh(
   planeGeometry,
-  cubeMaterial
+  material
 );
-// cubeMesh.rotation.reorder("YXZ")
+cubeMesh.rotation.reorder("YXZ")
 
 cubeMesh2.position.x = 2;
 planeMesh.position.x = -2;
 scene.add(cubeMesh);
 scene.add(cubeMesh2);
 scene.add(planeMesh);
-// const axesHelper = new THREE.AxesHelper(2)
-// scene.add(axesHelper)
+
+const axesHelper = new THREE.AxesHelper(2)
+scene.add(axesHelper)
+
+// initialize the light 
+const light = new THREE.AmbientLight(0xffffff, 0.1);
+scene.add(light);
+
+const pointLight = new THREE.PointLight(0xffffff, 50);
+pointLight.position.set(2, 2, 2);
+scene.add(pointLight);
 
 // initialize the camera
 const camera = new THREE.PerspectiveCamera(
