@@ -20,7 +20,7 @@ const cylinderGeometry = new THREE.CylinderGeometry(0.5, 0.5, 1, 32)
 
 //initialize the texture
 // const grassTexture = textureLoader.load('textures/whispy-grass-meadow-unity/whispy-grass-meadow-unity/wispy-grass-meadow_albedo.png');
-const grassTexture = textureLoader.load('textures/palani-selvam.jpg');
+const grassTexture = textureLoader.load('textures/Net-of-Cube.png');
 
 // initialize the material
 const material = new THREE.MeshBasicMaterial();
@@ -119,4 +119,4 @@ const renderloop = () => {
   renderer.render(scene, camera)
   window.requestAnimationFrame(renderloop)
 }
-renderloop()
+renderloop() 
