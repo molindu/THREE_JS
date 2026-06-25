@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { max, min, step } from 'three/tsl';
-// import { Pane } from 'tweakpane';
+import { Pane } from 'tweakpane';
 
-// const pane = new Pane();
+const pane = new Pane();
 
 // initialize the scene
 const scene = new THREE.Scene()
@@ -19,13 +19,31 @@ const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
 const cylinderGeometry = new THREE.CylinderGeometry(0.5, 0.5, 1, 32)
 
 //initialize the texture
-// const grassTexture = textureLoader.load('textures/whispy-grass-meadow-unity/whispy-grass-meadow-unity/wispy-grass-meadow_albedo.png');
-const grassTexture = textureLoader.load('textures/Net-of-Cube.png');
+const grassAlbedo = textureLoader.load('/textures/whispy-grass-meadow-unity/whispy-grass-meadow-unity/wispy-grass-meadow_albedo.png');
+const grassAo = textureLoader.load('/textures/whispy-grass-meadow-unity/whispy-grass-meadow-unity/wispy-grass-meadow_ao.png');
+const grassHeight = textureLoader.load('/textures/whispy-grass-meadow-unity/whispy-grass-meadow-unity/wispy-grass-meadow_height.png');
+const grassMetalic = textureLoader.load('/textures/whispy-grass-meadow-unity/whispy-grass-meadow-unity/wispy-grass-meadow_normal-ogl.png');
+const grassNormal = textureLoader.load('/textures/speckled-granite-tiles-unity/speckled-granite-tiles_albedo.png');
+const grassRoughness = textureLoader.load('/textures/speckled-granite-tiles-unity/roughnessMap.png');
+const metalnessMap = textureLoader.load('/textures/speckled-granite-tiles-unity/speckled-granite-tiles_ao.png');
+// const grassTexture = textureLoader.load('textures/Net-of-Cube.png');
 
 // initialize the material
-const material = new THREE.MeshBasicMaterial();
+const material = new THREE.MeshStandardMaterial();
 // const material = new THREE.MeshPhongMaterial();
-material.map = grassTexture;
+material.map = grassNormal;
+material.roughnessMap = grassRoughness;
+material.metalnessMap = metalnessMap;
+pane.addBinding(material, 'roughness', {
+  min: 0,
+  max: 1,
+  step: 0.01
+})
+pane.addBinding(material, 'metalness', {
+  min: 0,
+  max: 1,
+  step: 0.01
+})
 // material.color = new THREE.Color('red');
 
 // initialize the group 
@@ -66,12 +84,12 @@ const axesHelper = new THREE.AxesHelper(2)
 scene.add(axesHelper)
 
 //initialize the light 
-// const light = new THREE.AmbientLight(0xffffff, 0.4);
-// scene.add(light);
+const light = new THREE.AmbientLight(0xffffff, 0.4);
+scene.add(light);
 
-// const pointLight = new THREE.PointLight(0xffffff, 70);
-// pointLight.position.set(2, 2, 2);
-// scene.add(pointLight);
+const pointLight = new THREE.PointLight(0xffffff, 70);
+pointLight.position.set(2, 2, 2);
+scene.add(pointLight);
 
 // initialize the camera
 const camera = new THREE.PerspectiveCamera(
@@ -110,8 +128,8 @@ const renderloop = () => {
 
   group.children.forEach((child) => {
     if (child instanceof THREE.Mesh) {
-      child.rotation.x += 0.01;
-      child.rotation.y += 0.01;
+      // child.rotation.x += 0.01;
+      // child.rotation.y += 0.01;
     }
   });
 
