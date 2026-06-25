@@ -1,5 +1,9 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { max, min, step } from 'three/tsl';
+import { Pane } from 'tweakpane';
+
+const pane = new Pane();
 
 // initialize the scene
 const scene = new THREE.Scene()
@@ -18,12 +22,24 @@ const cylinderGeometry = new THREE.CylinderGeometry(0.5, 0.5, 1, 32)
 // const grassTexture = textureLoader.load('textures/whispy-grass-meadow-unity/whispy-grass-meadow-unity/wispy-grass-meadow_albedo.png');
 const grassTexture = textureLoader.load('textures/palani-selvam.jpg');
 grassTexture.repeat.set(10, 10);
-grassTexture.wrapS = THREE.MirrorRepeatWrapping;
-grassTexture.wrapT = THREE.MirrorRepeatWrapping;
-// grassTexture.wrapS = THREE.RepeatWrapping;
-// grassTexture.wrapT = THREE.RepeatWrapping;
+// grassTexture.wrapS = THREE.MirrorRepeatWrapping;
+// grassTexture.wrapT = THREE.MirrorRepeatWrapping;
+grassTexture.wrapS = THREE.RepeatWrapping;
+grassTexture.wrapT = THREE.RepeatWrapping;
 
-
+// grassTexture.offset.x = 0.5;
+pane.addBinding(grassTexture, 'offset', {
+  x: {
+    min: -1,
+    max: 1,
+    step: 0.001
+  },
+  y: {
+    min: -1,
+    max: 1,
+    step: 0.001
+  }
+});
 // initialize the material
 const material = new THREE.MeshBasicMaterial();
 // const material = new THREE.MeshPhongMaterial();
@@ -88,7 +104,7 @@ const camera = new THREE.PerspectiveCamera(
 
 const aspectRatio = window.innerWidth / window.innerHeight;
 camera.position.z = 10
-camera.position.y =10
+camera.position.y = 10
 
 // initialize the renderer
 const canvas = document.querySelector('canvas.threejs')
