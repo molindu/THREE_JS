@@ -15,16 +15,23 @@ const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
 const cylinderGeometry = new THREE.CylinderGeometry(0.5, 0.5, 1, 32)
 
 //initialize the texture
-const textureText = textureLoader.load('textures/speckled-granite-tiles-unity/speckled-granite-tiles_normal-ogl.png');
+// const grassTexture = textureLoader.load('textures/whispy-grass-meadow-unity/whispy-grass-meadow-unity/wispy-grass-meadow_albedo.png');
+const grassTexture = textureLoader.load('textures/palani-selvam.jpg');
+grassTexture.repeat.set(10, 10);
+grassTexture.wrapS = THREE.MirrorRepeatWrapping;
+grassTexture.wrapT = THREE.MirrorRepeatWrapping;
+// grassTexture.wrapS = THREE.RepeatWrapping;
+// grassTexture.wrapT = THREE.RepeatWrapping;
+
 
 // initialize the material
 const material = new THREE.MeshBasicMaterial();
 // const material = new THREE.MeshPhongMaterial();
-material.map = textureText;
+material.map = grassTexture;
 // material.color = new THREE.Color('red');
 
-// initialize the group
-const group = new THREE.Group();
+// initialize the group 
+// const group = new THREE.Group();
 
 const cubeMesh = new THREE.Mesh(
   cubeGeometry,
@@ -53,9 +60,13 @@ cubeMesh.rotation.reorder("YXZ")
 
 cubeMesh2.position.x = 2;
 planeMesh.position.x = -2;
+planeMesh.rotation.x = -(Math.PI * 0.5);
+planeMesh.scale.set(100, 100);
 
-group.add(cubeMesh, cubeMesh2, planeMesh, sphere, cylinder);
-scene.add(group);
+// group.add(cubeMesh, cubeMesh2, planeMesh, sphere, cylinder);
+// scene.add(group);
+scene.add(planeMesh);
+
 
 const axesHelper = new THREE.AxesHelper(2)
 scene.add(axesHelper)
@@ -70,13 +81,14 @@ scene.add(axesHelper)
 
 // initialize the camera
 const camera = new THREE.PerspectiveCamera(
-  70,
+  100,
   window.innerWidth / window.innerHeight,// aspect ratio
   0.1,// near
-  30) // property
+  10000) // property
 
 const aspectRatio = window.innerWidth / window.innerHeight;
-camera.position.z = 5
+camera.position.z = 10
+camera.position.y =10
 
 // initialize the renderer
 const canvas = document.querySelector('canvas.threejs')
@@ -102,12 +114,12 @@ window.addEventListener('resize', () => {
 //render the scene
 const renderloop = () => {
 
-  group.children.forEach((child) => {
-    if (child instanceof THREE.Mesh) {
-      child.rotation.x += 0.01;
-      child.rotation.y += 0.01;
-    }
-  });
+  // group.children.forEach((child) => {
+  //   if (child instanceof THREE.Mesh) {
+  //     child.rotation.x += 0.01;
+  //     child.rotation.y += 0.01;
+  //   }
+  // });
 
   controls.update()
   renderer.render(scene, camera)
