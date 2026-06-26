@@ -34,6 +34,8 @@ material.map = grassAlbedo;
 material.roughnessMap = grassRoughness;
 material.metalnessMap = grassMetalic;
 material.normalMap = grassNormal;
+material.displacementMap = grassHeight;
+
 
 pane.addBinding(material, 'roughness', {
   min: 0,
@@ -41,6 +43,11 @@ pane.addBinding(material, 'roughness', {
   step: 0.01
 })
 pane.addBinding(material, 'metalness', {
+  min: 0,
+  max: 1,
+  step: 0.01
+})
+pane.addBinding(material, 'displacementScale', {
   min: 0,
   max: 1,
   step: 0.01
