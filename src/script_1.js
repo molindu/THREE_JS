@@ -12,11 +12,25 @@ const scene = new THREE.Scene()
 const textureLoader = new THREE.TextureLoader();
 
 // add objects to the scene
-const cubeGeometry = new THREE.BoxGeometry(1, 1, 1)
-const torusKnotGeometry = new THREE.TorusKnotGeometry(0.5, 0.15, 100, 16)
+const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
+const uv2CubeGeometry = new THREE.BufferAttribute(cubeGeometry.attributes.uv.array, 2);
+cubeGeometry.setAttribute('uv2', uv2CubeGeometry);
+
+const torusKnotGeometry = new THREE.TorusKnotGeometry(0.5, 0.15, 100, 16);
+const uv2TorusKnotGeometry = new THREE.BufferAttribute(torusKnotGeometry.attributes.uv.array, 2);
+cubeGeometry.setAttribute('uv2', uv2TorusKnotGeometry);
+
 const planeGeometry = new THREE.PlaneGeometry(1, 1);
+const uv2PlaneGeometry = new THREE.BufferAttribute(planeGeometry.attributes.uv.array, 2);
+cubeGeometry.setAttribute('uv2', uv2PlaneGeometry);
+
 const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
-const cylinderGeometry = new THREE.CylinderGeometry(0.5, 0.5, 1, 32)
+const uv2SphereGeometry = new THREE.BufferAttribute(sphereGeometry.attributes.uv.array, 2);
+cubeGeometry.setAttribute('uv2', uv2SphereGeometry);
+
+const cylinderGeometry = new THREE.CylinderGeometry(0.5, 0.5, 1, 32);
+const uv2CylinderGeometry = new THREE.BufferAttribute(cylinderGeometry.attributes.uv.array, 2);
+cubeGeometry.setAttribute('uv2', uv2CylinderGeometry);
 
 //initialize the texture
 const grassAlbedo = textureLoader.load('/textures/whispy-grass-meadow-bl/wispy-grass-meadow_albedo.png');
@@ -35,7 +49,9 @@ material.roughnessMap = grassRoughness;
 material.metalnessMap = grassMetalic;
 material.normalMap = grassNormal;
 material.displacementMap = grassHeight;
-
+material.displacementScale = 0.01;
+material.aoMap = grassAo;
+material.aoMapIntensity = 1;
 
 pane.addBinding(material, 'roughness', {
   min: 0,
@@ -48,6 +64,11 @@ pane.addBinding(material, 'metalness', {
   step: 0.01
 })
 pane.addBinding(material, 'displacementScale', {
+  min: 0,
+  max: 1,
+  step: 0.01
+})
+pane.addBinding(material, 'aoMapIntensity', {
   min: 0,
   max: 1,
   step: 0.01
