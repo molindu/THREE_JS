@@ -19,21 +19,22 @@ const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
 const cylinderGeometry = new THREE.CylinderGeometry(0.5, 0.5, 1, 32)
 
 //initialize the texture
-const grassAlbedo = textureLoader.load('/textures/whispy-grass-meadow-unity/whispy-grass-meadow-unity/wispy-grass-meadow_albedo.png');
-const grassAo = textureLoader.load('/textures/whispy-grass-meadow-unity/whispy-grass-meadow-unity/wispy-grass-meadow_ao.png');
-const grassHeight = textureLoader.load('/textures/whispy-grass-meadow-unity/whispy-grass-meadow-unity/wispy-grass-meadow_height.png');
-const grassMetalic = textureLoader.load('/textures/whispy-grass-meadow-unity/whispy-grass-meadow-unity/wispy-grass-meadow_normal-ogl.png');
-const grassNormal = textureLoader.load('/textures/speckled-granite-tiles-unity/speckled-granite-tiles_albedo.png');
-const grassRoughness = textureLoader.load('/textures/speckled-granite-tiles-unity/roughnessMap.png');
-const metalnessMap = textureLoader.load('/textures/speckled-granite-tiles-unity/speckled-granite-tiles_ao.png');
+const grassAlbedo = textureLoader.load('/textures/whispy-grass-meadow-bl/wispy-grass-meadow_albedo.png');
+const grassAo = textureLoader.load('/textures/whispy-grass-meadow-bl/wispy-grass-meadow_ao.png');
+const grassHeight = textureLoader.load('/textures/whispy-grass-meadow-bl/wispy-grass-meadow_height.png');
+const grassMetalic = textureLoader.load('/textures/whispy-grass-meadow-bl/wispy-grass-meadow_metallic.png');
+const grassNormal = textureLoader.load('/textures/whispy-grass-meadow-bl/wispy-grass-meadow_normal-ogl.png');
+const grassRoughness = textureLoader.load('/textures/whispy-grass-meadow-bl/wispy-grass-meadow_roughness.png');
 // const grassTexture = textureLoader.load('textures/Net-of-Cube.png');
 
-// initialize the material
+// initialize the mate rial
 const material = new THREE.MeshStandardMaterial();
 // const material = new THREE.MeshPhongMaterial();
-material.map = grassNormal;
+material.map = grassAlbedo;
 material.roughnessMap = grassRoughness;
-material.metalnessMap = metalnessMap;
+material.metalnessMap = grassMetalic;
+material.normalMap = grassNormal;
+
 pane.addBinding(material, 'roughness', {
   min: 0,
   max: 1,
