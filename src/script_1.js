@@ -3,111 +3,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { max, min, step } from 'three/tsl';
 import { Pane } from 'tweakpane';
 
-const pane = new Pane();
-
 // initialize the scene
 const scene = new THREE.Scene()
-
-// initialize the loader
-const textureLoader = new THREE.TextureLoader();
-
-// add objects to the scene
-const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
-const uv2CubeGeometry = new THREE.BufferAttribute(cubeGeometry.attributes.uv.array, 2);
-cubeGeometry.setAttribute('uv2', uv2CubeGeometry);
-
-const torusKnotGeometry = new THREE.TorusKnotGeometry(0.5, 0.15, 100, 16);
-const uv2TorusKnotGeometry = new THREE.BufferAttribute(torusKnotGeometry.attributes.uv.array, 2);
-cubeGeometry.setAttribute('uv2', uv2TorusKnotGeometry);
-
-const planeGeometry = new THREE.PlaneGeometry(1, 1);
-const uv2PlaneGeometry = new THREE.BufferAttribute(planeGeometry.attributes.uv.array, 2);
-cubeGeometry.setAttribute('uv2', uv2PlaneGeometry);
-
-const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
-const uv2SphereGeometry = new THREE.BufferAttribute(sphereGeometry.attributes.uv.array, 2);
-cubeGeometry.setAttribute('uv2', uv2SphereGeometry);
-
-const cylinderGeometry = new THREE.CylinderGeometry(0.5, 0.5, 1, 32);
-const uv2CylinderGeometry = new THREE.BufferAttribute(cylinderGeometry.attributes.uv.array, 2);
-cubeGeometry.setAttribute('uv2', uv2CylinderGeometry);
-
-//initialize the texture
-const grassAlbedo = textureLoader.load('/textures/whispy-grass-meadow-bl/wispy-grass-meadow_albedo.png');
-const grassAo = textureLoader.load('/textures/whispy-grass-meadow-bl/wispy-grass-meadow_ao.png');
-const grassHeight = textureLoader.load('/textures/whispy-grass-meadow-bl/wispy-grass-meadow_height.png');
-const grassMetalic = textureLoader.load('/textures/whispy-grass-meadow-bl/wispy-grass-meadow_metallic.png');
-const grassNormal = textureLoader.load('/textures/whispy-grass-meadow-bl/wispy-grass-meadow_normal-ogl.png');
-const grassRoughness = textureLoader.load('/textures/whispy-grass-meadow-bl/wispy-grass-meadow_roughness.png');
-// const grassTexture = textureLoader.load('textures/Net-of-Cube.png');
-
-// initialize the mate rial
-const material = new THREE.MeshStandardMaterial();
-// const material = new THREE.MeshPhongMaterial();
-material.map = grassAlbedo;
-material.roughnessMap = grassRoughness;
-material.metalnessMap = grassMetalic;
-material.normalMap = grassNormal;
-material.displacementMap = grassHeight;
-material.displacementScale = 0.01;
-material.aoMap = grassAo;
-material.aoMapIntensity = 1;
-
-pane.addBinding(material, 'roughness', {
-  min: 0,
-  max: 1,
-  step: 0.01
-})
-pane.addBinding(material, 'metalness', {
-  min: 0,
-  max: 1,
-  step: 0.01
-})
-pane.addBinding(material, 'displacementScale', {
-  min: 0,
-  max: 1,
-  step: 0.01
-})
-pane.addBinding(material, 'aoMapIntensity', {
-  min: 0,
-  max: 1,
-  step: 0.01
-})
-// material.color = new THREE.Color('red');
-
-// initialize the group 
-const group = new THREE.Group();
-
-const cubeMesh = new THREE.Mesh(
-  cubeGeometry,
-  material
-)
-const cubeMesh2 = new THREE.Mesh(
-  torusKnotGeometry,
-  material
-)
-const planeMesh = new THREE.Mesh(
-  planeGeometry,
-  material
-);
-const sphere = new THREE.Mesh();
-sphere.geometry = sphereGeometry;
-sphere.material = material;
-sphere.position.y = 1.5;
-
-
-const cylinder = new THREE.Mesh();
-cylinder.geometry = cylinderGeometry;
-cylinder.material = material;
-cylinder.position.y = -1.5;
-
-cubeMesh.rotation.reorder("YXZ")
-
-cubeMesh2.position.x = 2;
-planeMesh.position.x = -2;
-
-group.add(cubeMesh, cubeMesh2, planeMesh, sphere, cylinder);
-scene.add(group);
 
 const axesHelper = new THREE.AxesHelper(2)
 scene.add(axesHelper)
@@ -154,13 +51,6 @@ window.addEventListener('resize', () => {
 
 //render the scene
 const renderloop = () => {
-
-  group.children.forEach((child) => {
-    if (child instanceof THREE.Mesh) {
-      // child.rotation.x += 0.01;
-      // child.rotation.y += 0.01;
-    }
-  });
 
   controls.update()
   renderer.render(scene, camera)
