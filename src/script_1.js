@@ -1,169 +1,348 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { max, min, step } from 'three/tsl';
 import { Pane } from 'tweakpane';
 
 const pane = new Pane();
 
-// initialize the scene
-const scene = new THREE.Scene()
 
-// initialize the loader
+// Scene
+const scene = new THREE.Scene();
+
+
+// Loader
 const textureLoader = new THREE.TextureLoader();
 
-// add objects to the scene
-const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
-const uv2CubeGeometry = new THREE.BufferAttribute(cubeGeometry.attributes.uv.array, 2);
-cubeGeometry.setAttribute('uv2', uv2CubeGeometry);
 
-const torusKnotGeometry = new THREE.TorusKnotGeometry(0.5, 0.15, 100, 16);
-const uv2TorusKnotGeometry = new THREE.BufferAttribute(torusKnotGeometry.attributes.uv.array, 2);
-cubeGeometry.setAttribute('uv2', uv2TorusKnotGeometry);
+// PBR material creator
+function createPBRMaterial(folder, name) {
 
-const planeGeometry = new THREE.PlaneGeometry(1, 1);
-const uv2PlaneGeometry = new THREE.BufferAttribute(planeGeometry.attributes.uv.array, 2);
-cubeGeometry.setAttribute('uv2', uv2PlaneGeometry);
+  const material = new THREE.MeshStandardMaterial();
 
-const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
-const uv2SphereGeometry = new THREE.BufferAttribute(sphereGeometry.attributes.uv.array, 2);
-cubeGeometry.setAttribute('uv2', uv2SphereGeometry);
 
-const cylinderGeometry = new THREE.CylinderGeometry(0.5, 0.5, 1, 32);
-const uv2CylinderGeometry = new THREE.BufferAttribute(cylinderGeometry.attributes.uv.array, 2);
-cubeGeometry.setAttribute('uv2', uv2CylinderGeometry);
+  material.map = textureLoader.load(
+    `/textures/${folder}/${name}_albedo.png`
+  );
 
-//initialize the texture
-const grassAlbedo = textureLoader.load('/textures/whispy-grass-meadow-bl/wispy-grass-meadow_albedo.png');
-const grassAo = textureLoader.load('/textures/whispy-grass-meadow-bl/wispy-grass-meadow_ao.png');
-const grassHeight = textureLoader.load('/textures/whispy-grass-meadow-bl/wispy-grass-meadow_height.png');
-const grassMetalic = textureLoader.load('/textures/whispy-grass-meadow-bl/wispy-grass-meadow_metallic.png');
-const grassNormal = textureLoader.load('/textures/whispy-grass-meadow-bl/wispy-grass-meadow_normal-ogl.png');
-const grassRoughness = textureLoader.load('/textures/whispy-grass-meadow-bl/wispy-grass-meadow_roughness.png');
-// const grassTexture = textureLoader.load('textures/Net-of-Cube.png');
+  material.normalMap = textureLoader.load(
+    `/textures/${folder}/${name}_normal-ogl.png`
+  );
 
-// initialize the mate rial
-const material = new THREE.MeshStandardMaterial();
-// const material = new THREE.MeshPhongMaterial();
-material.map = grassAlbedo;
-material.roughnessMap = grassRoughness;
-material.metalnessMap = grassMetalic;
-material.normalMap = grassNormal;
-material.displacementMap = grassHeight;
-material.displacementScale = 0.01;
-material.aoMap = grassAo;
-material.aoMapIntensity = 1;
+  material.roughnessMap = textureLoader.load(
+    `/textures/${folder}/${name}_roughness.png`
+  );
 
-pane.addBinding(material, 'roughness', {
-  min: 0,
-  max: 1,
-  step: 0.01
-})
-pane.addBinding(material, 'metalness', {
-  min: 0,
-  max: 1,
-  step: 0.01
-})
-pane.addBinding(material, 'displacementScale', {
-  min: 0,
-  max: 1,
-  step: 0.01
-})
-pane.addBinding(material, 'aoMapIntensity', {
-  min: 0,
-  max: 1,
-  step: 0.01
-})
-// material.color = new THREE.Color('red');
+  material.metalnessMap = textureLoader.load(
+    `/textures/${folder}/${name}_metallic.png`
+  );
 
-// initialize the group 
-const group = new THREE.Group();
+  material.aoMap = textureLoader.load(
+    `/textures/${folder}/${name}_ao.png`
+  );
 
-const cubeMesh = new THREE.Mesh(
-  cubeGeometry,
-  material
-)
-const cubeMesh2 = new THREE.Mesh(
-  torusKnotGeometry,
-  material
-)
-const planeMesh = new THREE.Mesh(
-  planeGeometry,
-  material
+  material.displacementMap = textureLoader.load(
+    `/textures/${folder}/${name}_height.png`
+  );
+
+
+  material.displacementScale = 0.03;
+  material.aoMapIntensity = 1;
+
+
+  return material;
+}
+
+
+
+// Create materials
+
+const rockMaterial = createPBRMaterial(
+  "rough-igneous-rock1-bl",
+  "rough-igneous-rock"
 );
-const sphere = new THREE.Mesh();
-sphere.geometry = sphereGeometry;
-sphere.material = material;
-sphere.position.y = 1.5;
 
 
-const cylinder = new THREE.Mesh();
-cylinder.geometry = cylinderGeometry;
-cylinder.material = material;
+const spaceMaterial = createPBRMaterial(
+  "space-cruiser-panels2-bl",
+  "space-cruiser-panels2"
+);
+
+
+const grassMaterial = createPBRMaterial(
+  "whispy-grass-meadow-bl",
+  "whispy-grass-meadow"
+);
+
+
+
+// Geometry
+
+const cubeGeometry = new THREE.BoxGeometry(
+  1, 1, 1
+);
+
+
+cubeGeometry.setAttribute(
+  "uv2",
+  new THREE.BufferAttribute(
+    cubeGeometry.attributes.uv.array,
+    2
+  )
+);
+
+
+
+const sphereGeometry = new THREE.SphereGeometry(
+  0.5,
+  32,
+  32
+);
+
+
+sphereGeometry.setAttribute(
+  "uv2",
+  new THREE.BufferAttribute(
+    sphereGeometry.attributes.uv.array,
+    2
+  )
+);
+
+
+
+const cylinderGeometry = new THREE.CylinderGeometry(
+  0.5,
+  0.5,
+  1,
+  32
+);
+
+
+cylinderGeometry.setAttribute(
+  "uv2",
+  new THREE.BufferAttribute(
+    cylinderGeometry.attributes.uv.array,
+    2
+  )
+);
+
+
+
+
+// Meshes
+
+const cube = new THREE.Mesh(
+  cubeGeometry,
+  rockMaterial
+);
+
+
+cube.position.x = -2;
+
+
+
+const sphere = new THREE.Mesh(
+  sphereGeometry,
+  spaceMaterial
+);
+
+
+sphere.position.y = 2;
+
+
+
+const cylinder = new THREE.Mesh(
+  cylinderGeometry,
+  grassMaterial
+);
+
+
+cylinder.position.x = 2;
 cylinder.position.y = -1.5;
 
-cubeMesh.rotation.reorder("YXZ")
 
-cubeMesh2.position.x = 2;
-planeMesh.position.x = -2;
 
-group.add(cubeMesh, cubeMesh2, planeMesh, sphere, cylinder);
-scene.add(group);
 
-const axesHelper = new THREE.AxesHelper(2)
-scene.add(axesHelper)
+scene.add(
+  cube,
+  sphere,
+  cylinder
+);
 
-//initialize the light 
-const light = new THREE.AmbientLight(0xffffff, 0.4);
-scene.add(light);
 
-const pointLight = new THREE.PointLight(0xffffff, 70);
-pointLight.position.set(2, 2, 2);
+
+// Helpers
+
+const axesHelper = new THREE.AxesHelper(3);
+scene.add(axesHelper);
+
+
+
+// Lights
+
+const ambientLight = new THREE.AmbientLight(
+  0xffffff,
+  0.5
+);
+
+scene.add(ambientLight);
+
+
+
+const pointLight = new THREE.PointLight(
+  0xffffff,
+  50
+);
+
+
+pointLight.position.set(
+  2,
+  3,
+  3
+);
+
 scene.add(pointLight);
 
-// initialize the camera
+
+
+
+// Tweakpane
+
+pane.addBinding(
+  rockMaterial,
+  "roughness",
+  {
+    min: 0,
+    max: 1,
+    step: 0.01
+  }
+);
+
+
+pane.addBinding(
+  rockMaterial,
+  "metalness",
+  {
+    min: 0,
+    max: 1,
+    step: 0.01
+  }
+);
+
+
+pane.addBinding(
+  rockMaterial,
+  "displacementScale",
+  {
+    min: 0,
+    max: 0.2,
+    step: 0.01
+  }
+);
+
+
+
+// Camera
+
 const camera = new THREE.PerspectiveCamera(
-  100,
-  window.innerWidth / window.innerHeight,// aspect ratio
-  0.1,// near
-  1000) // property
+  75,
+  window.innerWidth /
+  window.innerHeight,
+  0.1,
+  100
+);
 
-const aspectRatio = window.innerWidth / window.innerHeight;
-camera.position.z = 2
-camera.position.y = 2
 
-// initialize the renderer
-const canvas = document.querySelector('canvas.threejs')
+camera.position.set(
+  2,
+  2,
+  5
+);
+
+
+
+
+// Renderer
+
+const canvas = document.querySelector(
+  "canvas.threejs"
+);
+
+
 const renderer = new THREE.WebGLRenderer({
-  canvas: canvas,
+  canvas,
   antialias: true
-})
-renderer.setSize(window.innerWidth, window.innerHeight)
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+});
 
-//initialize the controls
-const controls = new OrbitControls(camera, canvas)
 
-controls.enableDamping = true
-// controls.autoRotate = true
+renderer.setSize(
+  window.innerWidth,
+  window.innerHeight
+);
 
-window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight)
-})
 
-//render the scene
-const renderloop = () => {
+renderer.setPixelRatio(
+  Math.min(
+    window.devicePixelRatio,
+    2
+  )
+);
 
-  group.children.forEach((child) => {
-    if (child instanceof THREE.Mesh) {
-      // child.rotation.x += 0.01;
-      // child.rotation.y += 0.01;
-    }
-  });
 
-  controls.update()
-  renderer.render(scene, camera)
-  window.requestAnimationFrame(renderloop)
+
+
+// Controls
+
+const controls = new OrbitControls(
+  camera,
+  canvas
+);
+
+
+controls.enableDamping = true;
+
+
+
+
+// Resize
+
+window.addEventListener(
+  "resize",
+  () => {
+
+    camera.aspect =
+      window.innerWidth /
+      window.innerHeight;
+
+    camera.updateProjectionMatrix();
+
+
+    renderer.setSize(
+      window.innerWidth,
+      window.innerHeight
+    );
+
+  }
+);
+
+
+
+
+// Animation
+
+function animate() {
+
+  controls.update();
+
+
+  renderer.render(
+    scene,
+    camera
+  );
+
+
+  requestAnimationFrame(
+    animate
+  );
 }
-renderloop() 
+
+
+animate();
